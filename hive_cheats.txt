@@ -1,0 +1,265 @@
+HIVE CMMDS
+
+-hive
+
+-show databases;
+
+-create databases mrinmayi;
+
+-use mrinmayi;
+
+-create table flight(flightno int,year int,destination varchar(20),delay float);
+
+-desc flight
+
+-select *from flight;
+
+-alter table flight rename to air_flight;
+
+-alter table air_flight add columns(source varchar(10));
+
+-drop table flight;
+
+-create table flight(fno int,year int,dest varchar(20),delay float)
+. . . . . . . . > row format delimited 
+. . . . . . . . > fields terminated by ','
+. . . . . . . . > lines terminated by '\n'
+. . . . . . . . > stored as textfile;
+
+
+-insert into flight values(121,2009,"Pune",12.1);
+
+-load data local inpath "/home/mayuri/Desktop/DSBDA/flightdata.txt" 
+. . . . . . . . > overwrite into table flight
+. . . . . . . . > ;
+
+-create table nflight(fno int,year int,source varchar(10))
+. . . . . . . . > row format delimited
+. . . . . . . . > fields terminated by ','
+. . . . . . . . > lines terminated by '\n'
+. . . . . . . . > stored as textfile;
+
+
+-insert into nflight values(126,2001,"Navi Mumbai");
+
+- select a.fno,a.year,a.dest,b.source
+. . . . . . . . > from flight a join nflight b
+. . . . . . . . > on (a.fno=b.fno);
+
+
+-create index flight_index on table flight(fno)
+. . . . . . . . > as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+. . . . . . . . > WITH DEFERRED REBUILD;
+
+
+- select AVG(delay) , year from flight
+. . . . . . . . > where year=2008
+. . . . . . . . > group by year
+. . . . . . . . > ;
+
+
+-create external table ex_emp(id int,name string)
+. . . . . . . . > row format delimited
+. . . . . . . . > fields terminated by ','
+. . . . . . . . > lines terminated by '\n'
+. . . . . . . . > stored as textfile;
+
+*************************************************************************************************************************************************************
+student:
+
+-create table student(id int, name varchar(20), brach varchar(20), marks int)
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile;
+
+-insert into student values();
+
+-desc student
+
+-select *from student;
+
+-load local data inpath ''
+overwrite into table student;
+
+-select AVG(marks) as avg_value
+from student
+group by name;
+
+-select *from student
+where marks>80
+
+-create table student2(id int, name varchar(20), roll int)
+row format delimited
+fields terminated by ','
+lines terminated by '\n'
+stored as textfile;
+
+-insert into student2 values();
+
+-select a.id, a.name, a.branch, a.marks, b.roll
+from student a join student2 b
+on(a.id=b.id)
+
+-select *from student
+where name='adi'
+
+*************************************************************************************************************************************************************88
+
+0: jdbc:hive2://> show databases;
+OK
++----------------+
+| database_name  |
++----------------+
+| ass3           |
+| default        |
+| mydatabase     |
++----------------+
+3 rows selected (1.17 seconds)
+0: jdbc:hive2://> use ass3;
+OK
+No rows affected (0.235 seconds)
+0: jdbc:hive2://> create table flight(flightno int,year int,destination varchar(20),delay float);
+OK
+No rows affected (1.341 seconds)
+
+0: jdbc:hive2://> alter table flight rename to air_flight;
+OK
+No rows affected (0.815 seconds)
+0: jdbc:hive2://> alter table air_flight add columns(source varchar(10));
+OK
+No rows affected (0.567 seconds)
+0: jdbc:hive2://> drop table flight;
+24/04/30 17:08:29 [HiveServer2-Background-Pool: Thread-74]: ERROR metadata.Hive: Table ass3.flight not found: hive.ass3.flight table not found
+OK
+No rows affected (0.237 seconds)
+0: jdbc:hive2://> desc air_flight;
+OK
++--------------+--------------+----------+
+|   col_name   |  data_type   | comment  |
++--------------+--------------+----------+
+| flightno     | int          |          |
+| year         | int          |          |
+| destination  | varchar(20)  |          |
+| delay        | float        |          |
+| source       | varchar(10)  |          |
++--------------+--------------+----------+
+5 rows selected (0.221 seconds)
+
+
+
+(making table compatible with text file)
+
+
+0: jdbc:hive2://> create table flight(fno int,year int,dest varchar(20),delay float)
+. . . . . . . . > row format delimited 
+. . . . . . . . > fields terminated by ','
+. . . . . . . . > lines terminated by '\n'
+. . . . . . . . > stored as textfile;
+OK
+No rows affected (0.29 seconds)
+
+(inserting values in table record by record)
+: jdbc:hive2://> desc flight
+. . . . . . . . > ;
+OK
++-----------+--------------+----------+
+| col_name  |  data_type   | comment  |
++-----------+--------------+----------+
+| fno       | int          |          |
+| year      | int          |          |
+| dest      | varchar(20)  |          |
+| delay     | float        |          |
++-----------+--------------+----------+
+4 rows selected (0.298 seconds)
+0: jdbc:hive2://> insert into flight values(121,2009,"Pune",12.1);
+
+
+(Checking records in table)
+0: jdbc:hive2://> select * from flight
+. . . . . . . . > ;
+24/04/30 17:34:53 [805af7e1-5312-48ce-90e6-8792de4729e5 main]: WARN metastore.ObjectStore: datanucleus.autoStartMechanismMode is set to unsupported value null . Setting it to value: ignored
+OK
++-------------+--------------+--------------+---------------+
+| flight.fno  | flight.year  | flight.dest  | flight.delay  |
++-------------+--------------+--------------+---------------+
+| 121         | 2009         | Pune         | 12.1          |
+| 122         | 2015         | Kolkata      | 31.1          |
++-------------+--------------+--------------+---------------+
+2 rows selected (0.445 seconds)
+
+
+(inserting values in table by text file direcly)
+0: jdbc:hive2://> load data local inpath "/home/mayuri/Desktop/DSBDA/flightdata" 
+. . . . . . . . > overwrite into table flight
+. . . . . . . . > ;
+Loading data to table ass3.flight
+24/04/30 17:42:04 [HiveServer2-Background-Pool: Thread-231]: WARN metastore.ObjectStore: datanucleus.autoStartMechanismMode is set to unsupported value null . Setting it to value: ignored
+24/04/30 17:42:05 [HiveServer2-Background-Pool: Thread-231]: WARN metastore.ObjectStore: datanucleus.autoStartMechanismMode is set to unsupported value null . Setting it to value: ignored
+OK
+No rows affected (0.893 seconds)
+
+
+0: jdbc:hive2://> select * from flight
+. . . . . . . . > ;
+24/04/30 17:42:53 [805af7e1-5312-48ce-90e6-8792de4729e5 main]: WARN metastore.ObjectStore: datanucleus.autoStartMechanismMode is set to unsupported value null . Setting it to value: ignored
+OK
++-------------+--------------+--------------+---------------+
+| flight.fno  | flight.year  | flight.dest  | flight.delay  |
++-------------+--------------+--------------+---------------+
+| 121         | 2009         | "Pune"       | 12.1          |
+| 122         | 2015         | "Kolkata"    | 31.1          |
+| 123         | 2008         | "Nashik"     | 20.1          |
+| 124         | 2023         | "Hydrabad"   | 34.1          |
+| 125         | 2024         | "Goa"        | 1.0           |
++-------------+--------------+--------------+---------------+
+5 rows selected (0.359 seconds)
+
+: jdbc:hive2://> create table nflight(fno int,year int,source varchar(10))
+. . . . . . . . > row format delimited
+. . . . . . . . > fields terminated by ','
+. . . . . . . . > lines terminated by '\n'
+. . . . . . . . > stored as textfile;
+OK
+No rows affected (0.223 seconds)
+
+0: jdbc:hive2://> insert into nflight values(126,2001,"Navi Mumbai");
+
+(joining two tables with common factor as fno)
+
+0: jdbc:hive2://> select a.fno,a.year,a.dest,b.source
+. . . . . . . . > from flight a join nflight b
+. . . . . . . . > on (a.fno=b.fno);
+
+
+0: jdbc:hive2://> create index flight_index on table flight(fno)
+. . . . . . . . > as 'org.apache.hadoop.hive.ql.index.compact.CompactIndexHandler'
+. . . . . . . . > WITH DEFERRED REBUILD;
+
+
+(Taking average of delay where year is 2008)
+0: jdbc:hive2://> select AVG(delay) , year from flight
+. . . . . . . . > where year=2008
+. . . . . . . . > group by year
+. . . . . . . . > ;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,325 @@
+1. Perform the following operations using Python on the Facebook metrics data sets 
+a. Create data subsets 
+b. Merge Data 
+c. Sort Data 
+d. Transposing Data 
+e. Shape and reshape Data 
+
+-import pandas as pd
+import numpy as np
+import seaborn as sns
+import matplotlib as plt
+import os
+
+-os.getcwd()
+
+-df=pd.read_csv(r"/content/dataset_Facebook.csv",sep=';')
+
+-#describing the dataframe
+df.describe()
+
+-df.shape
+
+-#1.) creating 3 subsets
+df1=df[['Page total likes','Category','Post Month','Post Weekday']].loc[0:15]
+df2=df[['Page total likes','Category','Post Month','Post Weekday']].loc[16:30]
+df3=df[['Page total likes','Category','Post Month','Post Weekday']].loc[31:50]
+
+df_subset1 = df[df['overallRating'] <= 3]  # For example, all rows with Rating <= 3
+df_subset2 = df[df['overallRating'] > 3]   # For example, all rows with Rating > 3
+
+-#merging (concatinating) subset1,2,3)
+merging=pd.concat([df1,df2,df3])
+
+-#sort data
+sort_values=df.sort_values('Page total likes',ascending=False )
+
+-#transposing data= columns converted into rows
+df.transpose()
+
+-#shape of data
+shaping=df.shape
+
+-#reshape data using pivot table method
+pivot_table=pd.pivot_table(df,index=['Type','Category'],values='comment')
+
+-reshaping_arr =np.array([1, 2, 3, 4, 5, 6])
+reshaping_arr.reshape(3,2)
+
+
+
+****************************************************************************************************************
+2. Perform the following operations using ‘python’ Language on the Air
+quality dataset.
+1) Data cleaning
+2) Data integration
+3) Error correcting
+4) Data model Building
+
+-air = pd.read_excel('/content/AirQualityUCI.xlsx')
+
+-cleaned_data.head()
+cleaned_data.head()
+
+-air.isnull().sum()
+
+-air.dropna(thresh=0.5*len(air), axis=1, inplace=True)
+
+-air.columns
+
+-#data integration
+df1= air.loc[1:20,['Date', 'NMHC(GT)']]
+df2= air.loc[21:31,['Date','NOx(GT)']]
+integrate= pd.concat([df1,df2])
+integrate.head()
+
+-#transpose
+transposed = air.transpose()
+transposed.head()
+
+-from sklearn.model_selection import train_test_split
+from sklearn import linear_model
+
+-x=air[['PT08.S1(CO)']]
+y=air[['CO(GT)']]
+
+-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+
+-reg=linear_model.LinearRegression()
+
+-model=reg.fit(x_train,y_train)
+
+-#Finding Accuracy
+
+-from sklearn.metrics import r2_score
+
+-y_pred=model.predict(x_test)
+
+-r2=r2_score(y_test,y_pred)
+
+-print("Accuracy is:",r2)
+
+-plt.scatter(x_train,y_train,color="red")
+plt.plot(x_train,model.predict(x_train),color="blue")
+plt.title("Train vs Test")
+plt.show()
+
+
+**************************************************************************************************************
+3. Perform the following operations using ‘python’ Language on the Heart
+Disease dataset.
+1) Data cleaning
+2) Data integration
+3) Error correcting
+4) Data model Building
+
+-cleaned= heart.dropna()
+
+-cleaned.head()
+
+-df1= heart.loc[1:20,['age','sex']]
+df2= heart.loc[21:31,['age','chol']]
+
+-intgrt= pd.concat([df1,df2])
+intgrt.head()
+
+-trans= heart.transpose()
+trans.head()
+
+#Model Building
+-from sklearn.model_selection import train_test_split
+from sklearn import linear_model
+
+-x=heart[['age']]
+y=heart[['sex']]
+
+-x_train,x_test,y_train,y_test=train_test_split(x,y,test_size=0.2)
+
+-reg=linear_model.LinearRegression()
+
+-model=reg.fit(x_train,y_train)
+
+-#Finding Accuracy
+
+-from sklearn.metrics import r2_score
+
+-y_pred=model.predict(x_test)
+
+-r2=r2_score(y_test,y_pred)
+
+-print("Accuracy is:",r2)
+
+-import matplotlib.pyplot as plt
+plt.scatter(x_train,y_train,color="red")
+plt.plot(x_train,model.predict(x_train),color="blue")
+plt.title("Train vs Test")
+plt.show()
+
+***********************************************************************************************************************************
+10 Visualize the data using Python libraries matplotlib, seaborn by plotting
+the graphs for Facebook metrics data sets.
+(Draw Boxplot, Histogram, Single Line Graph, Multiple Line Graph)
+
+11 Visualize the data using Python libraries matplotlib, seaborn by plotting
+the graphs for Air quality data sets.
+(Draw Boxplot, Histogram, Single Line Graph, Multiple Line Graph)
+
+12 Visualize the data using Python libraries matplotlib, seaborn by plotting
+the graphs for Heart Diseases data sets.
+(Draw Boxplot, Histogram, Single Line Graph, Multiple Line Graph)
+
+-# Draw Boxplot
+plt.figure(figsize=(10,6))
+sns.boxplot(data=fb)
+plt.title('Boxplot of Facebook Metrics')
+#plt.xticks(rotation=45)
+plt.show()
+
+# Draw Histogram
+-sns.histplot(data=fb['Page total likes'])
+
+# Single Line Graph
+-plt.plot(fb['Post Weekday'], fb['Page total likes'],marker='o')
+
+# Multiple Line Graph
+-plt.plot(fb['Type'], fb['Category'], marker='o', label='likes')
+plt.plot(fb['Post Weekday'], fb['Page total likes'],marker='o')
+plt.plot(fb['Post Hour'], fb['Paid'],marker='o')
+
+
+-# Draw Histogram
+plt.figure(figsize=(10, 6))
+sns.histplot(data=facebook_metrics_df['like'])
+plt.title('Histogram of Likes')
+plt.xlabel('Likes')
+plt.ylabel('Frequency')
+plt.show()
+
+
+***********************************************************************************************************************************
+24 Create a review scrapper for any ecommerce website to fetch real time
+comments, reviews and customer name using Python.
+(You can use Any Ecommerce Website)
+
+25 Create a review scrapper for any ecommerce website to fetch real time
+ratings, comment tags and customer name using Python.
+(You can use Any E-commerce Website)
+
+-import requests
+import bs4
+
+-request1= requests.get(' https://www.shopclues.com/nokia-1110i-mobile-refurbished-1-month-seller-warranty-1.html')
+
+-request1.content
+
+-soup= bs4.BeautifulSoup(request1.text)
+soup
+
+-reviews= soup.find_all('div',{'class':'review_desc'});
+for review in reviews:
+  print(review.get_text() + '\n\n')
+
+-#overall class ratings
+ratings = soup.find('div',{'class':'rnr_graph'}).get_text();
+print(ratings)
+
+-#individual ratings
+in_rating= soup.findAll('div',{'class':'prd_ratings'});
+for indi_rating in in_rating:
+  print(indi_rating.get_text()+ '\n')
+
+-#fetching tags
+tags = soup.find('span',{'class':'yhB1nd GXgmTe'}).get_text();
+tags
+
+-customer_name = soup.findAll('div',{'class':'r_by'});
+for customer in customer_name:
+  print(customer.get_text() + '\n')
+
+**********************************************************************************************************************************************************
+15.Visualize the data using Python libraries matplotlib, seaborn by plotting
+the graphs for Iris data sets.
+
+-plt.figure(figsize=(10, 6))
+sns.boxplot(x='sepal_length',y='sepal_width',data=iris)
+
+-sns.pairplot(iris, hue='species', markers=["o", "s", "D"])
+
+-sns.violinplot(x='species', y='sepal_length',data=iris)
+
+
+***************************************************************************************************************************************************************
+6 Perform the following operations using ‘python’ Language on the Amazon
+book review Data set.
+1) Create data subsets(Column wise)
+2) Merge Data (Column wise)
+3) Sort Data
+4) Transposing Data
+5) Reshape Data
+
+-column= df[['reviewerID','asin','reviewername']]
+column
+
+-df1= df.head(100)
+df1
+
+-rating = df[df['overallRating'] > 4]
+rating
+
+-merge = pd.concat([df1, rating])
+merge
+
+-sort = df.sort_values(by='reviewTime', ascending=False)
+sort
+
+-transpose= df.transpose()
+transpose
+
+-reshape= pd.melt(df)
+reshape
+
+-print('subset of rows with rating greater than 4:')
+print(rating.head())
+
+-print("Column Subset:")
+print(column_subset.head())
+
+print("\nMerged Data:")
+print(merged_data.head())
+
+print("\nSorted Data by Rating:")
+print(sorted_data.head())
+
+print("\nTransposed Data:")
+print(transposed_data.head())
+
+print("\nReshaped Data:")
+print(reshaped_data.head())
+
+******************************************************************************************************************************************************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
